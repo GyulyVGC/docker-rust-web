@@ -9,6 +9,8 @@ services:
     ports:
       - "3333:7878"
     build: ./server
+    # networks:
+    #   - rust-web
 
   client:
     container_name: rust-web-client
@@ -17,3 +19,9 @@ services:
     build: ./client
     depends_on:
       - server
+    # networks:
+    #   - rust-web
+
+# networks:
+#   rust-web:
+#     external: true
