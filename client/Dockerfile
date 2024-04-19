@@ -1,11 +1,9 @@
 FROM rust
 
-WORKDIR /server
-
-EXPOSE 7878
+WORKDIR /client
 
 COPY . .
 
 RUN cargo install --path .
 
-CMD ["server"]
+CMD ["client"]
