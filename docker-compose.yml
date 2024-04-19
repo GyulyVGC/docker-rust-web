@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+
+  server:
+    container_name: rust-web-server
+    hostname: rust-web-server
+    restart: always
+    ports:
+      - "3333:7878"
+    build: ./server
+
+  client:
+    container_name: rust-web-client
+    hostname: rust-web-client
+    restart: always
+    build: ./client
+    depends_on:
+      - server
