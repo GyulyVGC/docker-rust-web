@@ -12,6 +12,7 @@ fn main() {
     loop {
         let mut stream = TcpStream::connect("rust-web-server:7878").unwrap();
         stream.write_all(request.as_bytes()).unwrap();
+        drop(stream);
         sleep(Duration::from_secs(5));
     }
 }
