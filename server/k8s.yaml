@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rust-web-server
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: rust-web-server
+  
+  template:
+    metadata:
+      labels:
+        app: rust-web-server
+    
+    spec:
+      containers:
+      - name: rust-web-server
+  
+        image: gyulyvgc/rust-web-server:latest
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "250m"
+        ports:
+        - containerPort: 7878
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: rust-web-server
+spec:
+  type: LoadBalancer
+  selector:
+    app: rust-web-server
+  ports:
+  - port: 3333
+    targetPort: 7878
