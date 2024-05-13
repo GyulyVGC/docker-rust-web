@@ -15,19 +15,22 @@ fn main() {
 
     let listener = TcpListener::bind("0.0.0.0:7878").unwrap();
 
+    let mut num_requests = 0;
+
     for stream in listener.incoming() {
         let stream = stream.unwrap();
 
-        handle_connection(stream);
+        handle_connection(stream, &mut num_requests);
     }
 }
 
-fn handle_connection(mut stream: TcpStream) {
+fn handle_connection(mut stream: TcpStream, num_requests: &mut u32) {
     let buf_reader = BufReader::new(&mut stream);
     let request_line = buf_reader.lines().next().unwrap().unwrap();
 
     let (status_line, filename) = if request_line == "GET / HTTP/1.1" {
         println!("Responding with hello.html");
+        *num_requests += 1;
         ("HTTP/1.1 200 OK", "hello.html")
     } else {
         println!("Responding with 404.html");
@@ -35,8 +38,13 @@ fn handle_connection(mut stream: TcpStream) {
     };
 
     let mut contents = fs::read_to_string(filename).unwrap();
-    let host_string = format!("\nFrom host: {}", gethostname().to_string_lossy().to_string());
+
+    let host_string = format!("\n\nFrom host: {}", gethostname().to_string_lossy().to_string());
     contents.push_str(&host_string);
+
+    let requests_string = format!(" [answered requests: {}]", num_requests);
+    contents.push_str(&requests_string);
+
     let length = contents.len();
 
     let response =

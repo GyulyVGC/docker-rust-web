@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rust-web-client
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: rust-web-client
+  
+  template:
+    metadata:
+      labels:
+        app: rust-web-client
+    
+    spec:
+      containers:
+      - name: rust-web-client
+  
+        image: gyulyvgc/rust-web-client:latest
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "250m"
+
+# ---
+
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: rust-web-client
+# spec:
+#   type: ClusterIP
+#   selector:
+#     app: rust-web-client
