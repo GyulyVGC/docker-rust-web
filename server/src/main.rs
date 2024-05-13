@@ -4,6 +4,8 @@ use std::{
     net::{TcpListener, TcpStream},
 };
 
+use gethostname::gethostname;
+
 fn main() {
     ctrlc::set_handler(move || {
         println!("Received termination signal; exiting...");
@@ -11,7 +13,7 @@ fn main() {
     })
     .expect("Failed to set ctrlc handler");
 
-    let listener = TcpListener::bind("rust-web-server:7878").unwrap();
+    let listener = TcpListener::bind("0.0.0.0:7878").unwrap();
 
     for stream in listener.incoming() {
         let stream = stream.unwrap();
@@ -32,7 +34,9 @@ fn handle_connection(mut stream: TcpStream) {
         ("HTTP/1.1 404 NOT FOUND", "404.html")
     };
 
-    let contents = fs::read_to_string(filename).unwrap();
+    let mut contents = fs::read_to_string(filename).unwrap();
+    let host_string = format!("\nFrom host: {}", gethostname().to_string_lossy().to_string());
+    contents.push_str(&host_string);
     let length = contents.len();
 
     let response =
