@@ -22,14 +22,3 @@ spec:
           limits:
             memory: "128Mi"
             cpu: "250m"
-
-# ---
-
-# apiVersion: v1
-# kind: Service
-# metadata:
-#   name: rust-web-client
-# spec:
-#   type: ClusterIP
-#   selector:
-#     app: rust-web-client
